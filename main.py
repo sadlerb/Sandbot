@@ -59,8 +59,8 @@ async def on_message(message):
       order = last_entry[0]['order'] + 1      
     post = {'message':newMessage,'order':order}
     collection.insert_one(post)
-    await message.channel.send("The Degenerate will remember that.")
-    sys.stdout.write('The Degenerate has remembered')
+    await message.channel.send("The Sandbot will remember that.")
+    sys.stdout.write('The Sandbot has remembered')
 
 
   #The bot lists all quotes stored in the database 
