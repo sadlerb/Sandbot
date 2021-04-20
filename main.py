@@ -102,6 +102,8 @@ async def on_message(message):
   #get news
   if msg.startswith('$news'):
     news_array = get_news()
+    if news_array == None:
+      await message.channel.send('An error has occured.')
     for article in news_array:
       await message.channel.send(':newspaper: | ' + article)
       time.sleep(2)

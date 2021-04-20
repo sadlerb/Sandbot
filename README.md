@@ -11,6 +11,8 @@ Commands:
     
     $del <quoteID> - Delete a qoute from the database 
 
+    $news - Gets Recent news
+
 
   
   Planned: 
@@ -21,10 +23,14 @@ Commands:
 
      ``add news api``
      Allow search by category 
+     Post specificly to news channel
 
      very advanced decision making
 
      to do lists
+
+     post memes every hour
+
 
 
      
