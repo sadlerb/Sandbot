@@ -102,11 +102,11 @@ async def on_message(message):
   #get news
   if msg.startswith('$news'):
     news_array = get_news()
-    if news_array == None:
-      await message.channel.send('An error has occured.')
+    await message.channel.send('Beginning of articles')
     for article in news_array:
-      await message.channel.send(':newspaper: | ' + article)
       time.sleep(2)
+      await message.channel.send('\n ' + ':newspaper: | ' + article)
+
     await message.channel.send('End of articles')
 
   # The bot displays its commands
