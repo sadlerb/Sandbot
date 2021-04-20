@@ -1,8 +1,8 @@
 # Sandbot
 A discord bot that I built to do random things for fun
 
-Commands:
-
+##Commands:
+```
     $inspire - Receive a inspiring message
     
     $new <quote>  - Send the users qoute to a mongo database
@@ -12,24 +12,24 @@ Commands:
     $del <quoteID> - Delete a qoute from the database 
 
     $news - Gets Recent news
-
+```
 
   
-  Planned: 
+  ##Planned: 
   
-     A Command to create a poll
+     -A Command to create a poll
      
-     A search for a word or sentense on google 
+     -A search for a word or sentense on google 
 
-     ``add news api``
-     Allow search by category 
-     Post specificly to news channel
+     -~~add news api~~
+     -Allow search by category 
+     -Post specificly to news channel
 
-     very advanced decision making
+     -very advanced decision making
 
-     to do lists
+     -to do lists
 
-     post memes every hour
+     -post memes every hour
 
 
 
