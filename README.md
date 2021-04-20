@@ -1,7 +1,7 @@
 # Sandbot
 A discord bot that I built to do random things for fun
 
-##Commands:
+## Commands:
 ```
     $inspire - Receive a inspiring message
     
@@ -15,21 +15,16 @@ A discord bot that I built to do random things for fun
 ```
 
   
-  ##Planned: 
+  ## Planned: 
   
-     -A Command to create a poll
-     
-     -A search for a word or sentense on google 
-
-     -~~add news api~~
-     -Allow search by category 
-     -Post specificly to news channel
-
-     -very advanced decision making
-
-     -to do lists
-
-     -post memes every hour
+  -A Command to create a poll
+  -A search for a word or sentense on google 
+ ~~- add news api ~~
+ -Allow search by category 
+ -Post specificly to news channel
+ -very advanced decision making
+ -to do lists
+ -post memes every hour
 
 
 
