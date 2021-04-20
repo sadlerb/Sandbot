@@ -10,11 +10,22 @@ Commands:
     $list - View all quotes in the database 
     
     $del <quoteID> - Delete a qoute from the database 
+
+
   
   Planned: 
   
      A Command to create a poll
      
      A search for a word or sentense on google 
+
+     ``add news api``
+     Allow search by category 
+
+     very advanced decision making
+
+     to do lists
+
+
      
      
