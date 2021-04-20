@@ -17,8 +17,8 @@ A discord bot that I built to do random things for fun
   
   ## Planned: 
   
--A Command to create a poll
--A search for a word or sentense on google 
+- A Command to create a poll
+- A search for a word or sentense on google 
 ~~- add news api ~~
 - Allow search by category 
 - Post specificly to news channel
