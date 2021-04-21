@@ -17,5 +17,5 @@ def get_news():
   json_data = json.loads(response.text)
   for item in json_data['articles']:
     sys.stdout.flush()
-    news.append('**' + item['title'] + '**' + '\n' + '\n >>> ' + item['url'] + '\n')
+    news.append('**' + item['title'] + '**' +  '\n >>> ' + item['url'] + '\n')
   return news
