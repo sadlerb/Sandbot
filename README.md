@@ -28,7 +28,7 @@ $clean amount - Deletes amount number of messages in the current channel after c
     - [ ] Allow news search by category 
     - [ ] Post only to news text channel
 - [X] Delete message history
-    -[ ] Only specific role can delete chat history
+    - [ ] Only specific role can delete chat history
 - [X] very advanced decision making
 - [ ] to do lists
 - [ ] post memes every hour
