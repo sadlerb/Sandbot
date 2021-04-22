@@ -15,7 +15,8 @@ def get_news():
   news = []
   response = requests.get('https://newsapi.org/v2/top-headlines?country=us&apiKey=9e638516f05e48f28b85bd65158e59c7')
   json_data = json.loads(response.text)
+  total = json_data['totalResults']
   for item in json_data['articles']:
     sys.stdout.flush()
     news.append('**' + item['title'] + '**' +  '\n >>> ' + item['url'] + '\n')
-  return news
+  return [news,total]
