@@ -4,21 +4,19 @@ import time
 import random
 from datetime import datetime
 from app import db, bot
-from app.database import document_exists, getAllEntries, getLastEntry, getRandomEntry
-from app.request_manager import get_inspiration, get_news
+from app.database import *
+from app.request_manager import *
+from discord.ext import commands
 from discord.ext.commands.errors import MissingRequiredArgument
+from discord import Game
 import asyncio
-
-
-
-
-
-
+import discord
 
 sad_words = ['sad','depressed','unhappy','miserable','angry','depressing','miserable','fucked']
 
 @bot.event
 async def on_ready():
+  await bot.change_presence(activity=Game(name='$commands'))
   sys.stdout.write('We have logged in as {0.user}'.format(bot))
   sys.stdout.flush()
 
@@ -26,13 +24,33 @@ async def on_ready():
 async def on_message(message):
   if message.author == bot.user:
     return
-
-  if any(word in message.content for word in sad_words):
+  
+  if any(word.lower() in message.content for word in sad_words):
     response = getRandomEntry(db['messages'])
     await message.channel.send(response['message'])
     sys.stdout.write('A user has been encouraged')
     sys.stdout.flush()
   await bot.process_commands(message)
+
+@bot.event
+async def on_message_delete(message):
+  if message.author == bot.user:
+    return
+  
+  await message.channel.send('I saw that delete ' + message.author.name + '. What are you hiding?')
+  print_log('A user was sus.')
+
+@bot.event
+async def on_message_edit(before,after):
+  if before.author == bot.user:
+    return
+  await after.channel.send('I saw that edit '  + after.author.name + '.')
+  print_log('A user has been warned')
+
+@bot.event
+async def on_command_error(ctx,error):
+  if isinstance(error,commands.CommandOnCooldown):
+    await ctx.send('** Still on cooldown**. Please try again in {:.2f}s'.format(error.retry_after))
 
 
 # The bot inspires the user with a quote upon request
@@ -42,12 +60,7 @@ async def inspire(ctx):
   await ctx.send(quote)
   print_log('A user has been inspired')
     
-@bot.event
-async def on_message_edit(before,after):
-  if before.author == bot.user:
-    return
-  await after.channel.send('I saw that edit '  + after.author.name + '.')
-  print_log('A user has been warned')
+
   #The users message is added to the database
 @bot.command(name='new')
 async def save_quote(ctx, *, arg):
@@ -95,8 +108,8 @@ async def delete(ctx,arg):
           await ctx.send('Quote deleted',delete_after=5)
           sys.stdout.write('Quote deleted')
         else:
-          await ctx.send('That quote does not exist.')
-          sys.stdout.write('The requested quote was not found',delete_after=5)
+          await ctx.send('That quote does not exist.',delete_after=5)
+          sys.stdout.write('The requested quote was not found')
   except ValueError:
     await ctx.send('Please make sure the id is correct and try again.',delete_after=5)
   except MissingRequiredArgument:
@@ -111,7 +124,7 @@ async def news(ctx):
   now = datetime.now().strftime('%d-%m-%Y at %H:%M')
   await ctx.send('Beginning of articles for ' + now )
   for article in news_array:
-    time.sleep(2)
+    time.sleep(5)
     await ctx.send('\n ' + ':newspaper: | ' + article)
 
   await ctx.send( str(number) + ' articles sent at ' + now)
@@ -125,31 +138,46 @@ async def decide(ctx, *, args):
 
 @bot.command()
 async def clean(ctx,amount):
-  mgs = []
-  if amount is None:
-    await ctx.channel.send('Please enter the number of messages you want deleted',delete_after=5)
+  amount = int(amount)
+  if amount > 98 or amount < 1:
+    await ctx.send('Please enter a number between 1 and 98',delete_after=5)
+    return 
+  await ctx.send('Add reaction 👍 to confirm',delete_after=10)
+  def check (reaction,user):
+    return user == ctx.message.author and str(reaction.emoji) == '👍'
+
+  try:
+    reaction,user = await bot.wait_for('reaction_add',timeout=10,check=check)
+
+  except ValueError:
+    ctx.channel.send('Please enter a number',delete_after=5)
+
+  except asyncio.TimeoutError:
+    await ctx.send('Method aborted',delete_after=5)
+
+  except MissingRequiredArgument:
+    await ctx.send('No amount was given. Aborting process',delete_after=5)
+    
   else:
-    amount = int(amount)
-    if amount > 98 or amount < 1:
-      await ctx.send('Please enter a number between 1 and 98',delete_after=5)
-      return 
-    await ctx.send('Add reaction 👍 to confirm',delete_after=10)
+    mgs = []
+    async for m in ctx.channel.history(limit=amount+2):
+      mgs.append(m)
+    await ctx.channel.delete_messages(mgs)
+    await ctx.send('The evidence has been removed',delete_after=5)
+    print_log('Some evidence was removed')
 
-    def check (reaction,user):
-      return user == ctx.message.author and str(reaction.emoji) == '👍'
-
-    try:
-      reaction,user = await bot.wait_for('reaction_add',timeout=10,check=check)
-    except ValueError:
-      ctx.channel.send('Please enter a number',delete_after=5)
-    except asyncio.TimeoutError:
-      await ctx.send('Method aborted',delete_after=5)
-    else:
-      async for m in ctx.channel.history(limit=amount+2):
-        mgs.append(m)
-      await ctx.channel.delete_messages(mgs)
-      await ctx.send('The evidence has been removed',delete_after=5)
-      print_log('Some evidence was removed')
+@bot.command()
+@commands.cooldown(1, 15, commands.BucketType.user)
+async def search(ctx, *, args):
+  await ctx.send('Searching ...',delete_after=5)
+  result = wikiSearch(args)
+  if result['response'] == 1:
+    message = result['extract']
+    embed = discord.Embed(title=result['title'],url='https://en.wikipedia.org/wiki/' + result['url'],description='View Wiki article for ' + result['title'])
+    await ctx.send(message,embed=embed)
+  else:
+    message = "No results were found."
+    await ctx.send(message)
 
 
 
@@ -158,17 +186,18 @@ async def clean(ctx,amount):
 async def get_commands(ctx):
   commands = '''
   $inspire - Receive a inspiring message
-  $new 'quotehere'  - Add a new sentence to my vocabulary
+  $new 'quotehere' - Add a new sentence to my vocabulary
   $list - View my current vocabulary
   $del 'quoteid' - Delete a sentense from my vocabulary
   $news - Get latest news articles
   $decide choice1?choice2?choicex - I will use advanced AI technology to select the right choice for you
-  $clean 'amount'- I will delete amount number of messages. Limit = 98
+  $clean 'amount' - I will delete amount number of messages. Limit = 98
+  $search 'query' - I will search for whatever you tell me to on wiki
   I will randomly pop in from time to time on certain comments
   '''
   response = '```' + commands + '```'
   await ctx.send(response)
-  print_log('Instructions have been delivered')
+  print_log('Sandbots commands have been delivered')
 
 def print_log(message):
   sys.stdout.write(message)

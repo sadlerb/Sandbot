@@ -10,7 +10,6 @@ def getLastEntry(collection):
 def getRandomEntry(collection):
     lenCollection = collection.count_documents({})
     randInt = random.randint(0,lenCollection-1)
-    print(randInt)
     sys.stdout.flush()
     entry = collection.find().limit(-1).skip(randInt).next()
     return entry

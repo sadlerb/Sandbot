@@ -13,9 +13,11 @@ $del <quoteID> - Delete a qoute from the database
 
 $news - Gets Recent news
 
-$decide choice1,choice2,choicex - Makes a difficult decision for a user
+$decide choice1?choice2?choicex - Makes a difficult decision for a user
 
 $clean amount - Deletes amount number of messages in the current channel after confirmation  
+
+$search <query> - Search for an article from wikipedia
 ```
 
   
@@ -23,7 +25,8 @@ $clean amount - Deletes amount number of messages in the current channel after c
   
   
 - [ ] A Command to create a poll
-- [ ] A search for a word or sentence on google 
+- [X] A search for a word or sentence on ~google~  Wiki
+  - [ ] Add ability to search using different engines (wiki,google,urban dictionary)
 - [X] Add ability to get current news headlines and links 
     - [ ] Allow news search by category 
     - [ ] Post only to news text channel
@@ -34,7 +37,6 @@ $clean amount - Deletes amount number of messages in the current channel after c
 - [ ] post memes every hour
 - [ ] Post live updates on videogame sales 
 
+Known issues
 
-
-     
-     
+- No responses are sent if the del command receives an incorrect argument

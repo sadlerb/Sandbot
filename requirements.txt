@@ -3,3 +3,5 @@ pymongo
 dnspython
 requests
 jsons
+google
+wikipedia-api
