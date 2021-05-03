@@ -3,7 +3,7 @@ import json
 import requests
 import sys
 import time
-
+from googlesearch import search
 
 inspiration_url = 'https://zenquotes.io/api'
 news_url = 'https://newsapi.org'
@@ -47,7 +47,7 @@ def wikiSearch(searchPage):
     'exsentences': 3,
     'explaintext': 1
 }
-    time.sleep(3)
+    time.sleep(1)
     response_ext = requests.get(wiki_url,PARAMS_EXT)
     json_data = json.loads(response_ext.text.encode('utf-8').decode('ascii', 'ignore'))
     extract = json_data['query']['pages'][str(page['pageid'])]['extract']
@@ -63,3 +63,9 @@ def wikiSearch(searchPage):
   return result
 
 
+
+def googleSearch(query):
+  results= []
+  for j in search(query, tld="co.in", num=5, stop=5, pause=2):
+    results.append(j)
+  return results

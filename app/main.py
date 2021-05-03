@@ -178,8 +178,12 @@ async def search(ctx, *, args):
   else:
     message = "No results were found."
     await ctx.send(message)
+  print_log('A user has been given knowleage.')
 
-
+@bot.command()
+async def google (ctx,*,args):
+  results = googleSearch(args)
+  await ctx.send('\n'.join(results))
 
 # The bot displays its commands
 @bot.command(name='commands')
@@ -192,7 +196,7 @@ async def get_commands(ctx):
   $news - Get latest news articles
   $decide choice1?choice2?choicex - I will use advanced AI technology to select the right choice for you
   $clean 'amount' - I will delete amount number of messages. Limit = 98
-  $search 'query' - I will search for whatever you tell me to on wiki
+  $search 'query' - I will search for whatever you tell me to on wiki (15 second cooldown)
   I will randomly pop in from time to time on certain comments
   '''
   response = '```' + commands + '```'

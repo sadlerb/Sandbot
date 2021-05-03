@@ -4,4 +4,4 @@ dnspython
 requests
 jsons
 google
-wikipedia-api
+beautifulsoup4
