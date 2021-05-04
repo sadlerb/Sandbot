@@ -4,10 +4,16 @@ import requests
 import sys
 import time
 from googlesearch import search
+from bs4 import BeautifulSoup
+
 
 inspiration_url = 'https://zenquotes.io/api'
 news_url = 'https://newsapi.org'
 wiki_url = 'https://en.wikipedia.org/w/api.php'
+urban_url = 'https://www.urbandictionary.com/define.php'
+
+
+
 def get_inspiration():
   response = requests.get( inspiration_url + '/random')
   json_data = json.loads(response.text)
@@ -51,7 +57,7 @@ def wikiSearch(searchPage):
     response_ext = requests.get(wiki_url,PARAMS_EXT)
     json_data = json.loads(response_ext.text.encode('utf-8').decode('ascii', 'ignore'))
     extract = json_data['query']['pages'][str(page['pageid'])]['extract']
-    url = page['title'].replace(' ','_')
+    url = 'https://en.wikipedia.org/wiki/' + page['title'].replace(' ','_')
     result = {
       'response': 1,
       'title':page['title'],
@@ -66,6 +72,22 @@ def wikiSearch(searchPage):
 
 def googleSearch(query):
   results= []
-  for j in search(query, tld="co.in", num=5, stop=5, pause=2):
+  for j in search(query, tld="co.in", num=3, stop=3, pause=1):
     results.append(j)
+  return results
+
+def urbanSearch(query):
+  params = '?term=' + query.replace(' ','+')
+  url = urban_url + params
+  page = requests.get(url)
+  soup = BeautifulSoup(page.content,'html.parser')
+  if soup.find("body", {"class": "generated"}) is not None:
+    for br in soup.findAll('br'):
+      br.replace_with('\n')
+    word = soup.find(class_='word').text
+    meaning = soup.find(class_='meaning').text
+    example = soup.find(class_='example').text
+    results = {'url':url,'word':word,'meaning':meaning,'example':example,'response':1}
+  else:
+    results = {'response':0}
   return results

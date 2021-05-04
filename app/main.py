@@ -11,6 +11,7 @@ from discord.ext.commands.errors import MissingRequiredArgument
 from discord import Game
 import asyncio
 import discord
+from discord.errors import HTTPException
 
 sad_words = ['sad','depressed','unhappy','miserable','angry','depressing','miserable','fucked']
 
@@ -50,7 +51,7 @@ async def on_message_edit(before,after):
 @bot.event
 async def on_command_error(ctx,error):
   if isinstance(error,commands.CommandOnCooldown):
-    await ctx.send('** Still on cooldown**. Please try again in {:.2f}s'.format(error.retry_after))
+    await ctx.send('** Still on cooldown**. Please try again in {:.2f}s'.format(error.retry_after),delete_after=3)
 
 
 # The bot inspires the user with a quote upon request
@@ -167,36 +168,61 @@ async def clean(ctx,amount):
     print_log('Some evidence was removed')
 
 @bot.command()
-@commands.cooldown(1, 15, commands.BucketType.user)
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def search(ctx, *, args):
-  await ctx.send('Searching ...',delete_after=5)
-  result = wikiSearch(args)
-  if result['response'] == 1:
-    message = result['extract']
-    embed = discord.Embed(title=result['title'],url='https://en.wikipedia.org/wiki/' + result['url'],description='View Wiki article for ' + result['title'])
-    await ctx.send(message,embed=embed)
-  else:
-    message = "No results were found."
-    await ctx.send(message)
-  print_log('A user has been given knowleage.')
+  try:
+    await ctx.send('Searching ...',delete_after=2)
+    arguments = args.split(' ')
+    query = ' '
+    search_engine = arguments[0].lower()
+    if 'w' in search_engine:
+      result = wikiSearch(query.join(arguments[1:]))
+      if result['response'] == 1:
+        message = '**' + result['title'] + '**\n\n' + result['extract']
+        embed = discord.Embed(title=result['title'],url=result['url'],description='Wikipedia ' + result['title'])
+        await ctx.send(message,embed=embed)
+      else:
+        message = "No results were found on Wikipedia."
+        await ctx.send(message)
+    elif 'g' in search_engine:
+      result = googleSearch((query.join(arguments[1:])))
+      await ctx.send('\n'.join(result))
+    elif 'u' in search_engine:
+      result = urbanSearch(query.join(arguments[1:]))
+      if result['response'] == 1:
+        message = '**%s** \n\n%s \n\n*%s* ' % (result['word'],result['meaning'],result['example'])
+        embed = discord.Embed(title=result['word'],url=result['url'],description= 'Urban Dictionary ' + result['word'])
+        await ctx.send(message,embed=embed)
+      else:
+        await ctx.send('Word was not found on Urban Dictionary')
+    else:
+      result = googleSearch((query.join(args)))
+      await ctx.send('\n'.join(result))
+  except HTTPException:
+      result = googleSearch((query.join(args)))
+      await ctx.send('\n'.join(result))
+  except Exception as err:
+    exception_type = type(err).__name__
+    print_log(exception_type)
 
-@bot.command()
-async def google (ctx,*,args):
-  results = googleSearch(args)
-  await ctx.send('\n'.join(results))
+  print_log('A user has requested knowleage.')
+
+
+
 
 # The bot displays its commands
 @bot.command(name='commands')
 async def get_commands(ctx):
   commands = '''
-  $inspire - Receive a inspiring message
+  **$inspire** - Receive a inspiring message
   $new 'quotehere' - Add a new sentence to my vocabulary
   $list - View my current vocabulary
   $del 'quoteid' - Delete a sentense from my vocabulary
   $news - Get latest news articles
   $decide choice1?choice2?choicex - I will use advanced AI technology to select the right choice for you
   $clean 'amount' - I will delete amount number of messages. Limit = 98
-  $search 'query' - I will search for whatever you tell me to on wiki (15 second cooldown)
+  $search 'engine' 'query' - I will search for whatever you tell me to on the requested engine(5 second cooldown). Default google when no engine is found
+  Current engines are google, wikipedia and urban dictionary
   I will randomly pop in from time to time on certain comments
   '''
   response = '```' + commands + '```'

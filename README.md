@@ -18,6 +18,8 @@ $decide choice1?choice2?choicex - Makes a difficult decision for a user
 $clean amount - Deletes amount number of messages in the current channel after confirmation  
 
 $search <query> - Search for an article from wikipedia
+
+$google  <query> - Search for the query on google and return the first 5 links found
 ```
 
   
@@ -26,12 +28,15 @@ $search <query> - Search for an article from wikipedia
   
 - [ ] A Command to create a poll
 - [X] A search for a word or sentence on ~google~  Wiki
-  - [ ] Add ability to search using different engines (wiki,google,urban dictionary)
+  - [X] Add ability to search using different engines (wiki,google,urban dictionary)
+  - [ ] Return first three results from urban dictionary 
+  - [ ] Add wiki image to embed
+  - [ ] Modify current google results to better format
 - [X] Add ability to get current news headlines and links 
-    - [ ] Allow news search by category 
-    - [ ] Post only to news text channel
+  - [ ] Allow news search by category 
+  - [ ] Post only to news text channel
 - [X] Delete message history
-    - [ ] Only specific role can delete chat history
+  - [ ] Only specific role can delete chat history
 - [X] very advanced decision making
 - [ ] to do lists
 - [ ] post memes every hour
