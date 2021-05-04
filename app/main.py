@@ -62,6 +62,7 @@ async def daily_word():
   embed = discord.Embed(title=result['word'],url=result['url'],description= 'Urban Dictionary ' + result['word'])
   message_channel = bot.get_channel(839259915049893938)
   await message_channel.send(message)
+  await message_channel.send(embed)
   print_log('Daily Word sent')
 
 @daily_word.before_loop
