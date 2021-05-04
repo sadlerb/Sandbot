@@ -17,9 +17,9 @@ $decide choice1?choice2?choicex - Makes a difficult decision for a user
 
 $clean amount - Deletes amount number of messages in the current channel after confirmation  
 
-$search <query> - Search for an article from wikipedia
+$search <engine> <query> - Search for a given word on the specified engine. Default google
+Current Engines: Google,Wikipedia,Urban Dictionary
 
-$google  <query> - Search for the query on google and return the first 5 links found
 ```
 
   
