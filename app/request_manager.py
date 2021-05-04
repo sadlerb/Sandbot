@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 inspiration_url = 'https://zenquotes.io/api'
 news_url = 'https://newsapi.org'
 wiki_url = 'https://en.wikipedia.org/w/api.php'
-urban_url = 'https://www.urbandictionary.com/define.php'
+urban_url = 'https://www.urbandictionary.com/'
 
 
 
@@ -77,7 +77,7 @@ def googleSearch(query):
   return results
 
 def urbanSearch(query):
-  params = '?term=' + query.replace(' ','+')
+  params = 'define.php?term=' + query.replace(' ','+')
   url = urban_url + params
   page = requests.get(url)
   soup = BeautifulSoup(page.content,'html.parser')
@@ -91,3 +91,23 @@ def urbanSearch(query):
   else:
     results = {'response':0}
   return results
+
+def get_daily_urban_word():
+  page = requests.get(urban_url)
+  soup = BeautifulSoup(page.content,'html.parser')
+  try:
+    if soup.find("body",{'class':'generated'}) is not None:
+      for br in soup.findAll('br'):
+        br.replace_with('\n')
+    word = soup.find(class_='word').text
+    meaning = soup.find(class_='meaning').text
+    example = soup.find(class_='example').text
+    params = 'define.php?term=' + word.replace(' ','+')
+    url = urban_url + params
+    results = {'url':url,'word':word,'meaning':meaning,'example':example,'response':1}
+    return results
+  except Exception as err:
+    exception_type = type(err).__name__
+    print(exception_type)
+    sys.stdout.flush()
+    return {'response':0}

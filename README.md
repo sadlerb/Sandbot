@@ -27,9 +27,11 @@ Current Engines: Google,Wikipedia,Urban Dictionary
   
   
 - [ ] A Command to create a poll
-- [X] A search for a word or sentence on ~google~  Wiki
+- [X] A search for a word or sentence on google
   - [X] Add ability to search using different engines (wiki,google,urban dictionary)
+    - [ ] Add additional searches as needed
   - [ ] Return first three results from urban dictionary 
+  - [X] Auto post Urban Dictionary word of the day
   - [ ] Add wiki image to embed
   - [ ] Modify current google results to better format
 - [X] Add ability to get current news headlines and links 

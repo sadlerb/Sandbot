@@ -6,7 +6,7 @@ from datetime import datetime
 from app import db, bot
 from app.database import *
 from app.request_manager import *
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ext.commands.errors import MissingRequiredArgument
 from discord import Game
 import asyncio
@@ -20,6 +20,7 @@ async def on_ready():
   await bot.change_presence(activity=Game(name='$commands'))
   sys.stdout.write('We have logged in as {0.user}'.format(bot))
   sys.stdout.flush()
+  daily_word.start()
 
 @bot.event
 async def on_message(message):
@@ -52,8 +53,20 @@ async def on_message_edit(before,after):
 async def on_command_error(ctx,error):
   if isinstance(error,commands.CommandOnCooldown):
     await ctx.send('** Still on cooldown**. Please try again in {:.2f}s'.format(error.retry_after),delete_after=3)
+    
 
+@tasks.loop(hours=24)
+async def daily_word():
+  result = get_daily_urban_word()
+  message = '**Word of the Day** \n\n***%s*** \n\n%s \n\n*%s* ' % (result['word'],result['meaning'],result['example'])
+  embed = discord.Embed(title=result['word'],url=result['url'],description= 'Urban Dictionary ' + result['word'])
+  message_channel = bot.get_channel(839259915049893938)
+  await message_channel.send(message)
+  print_log('Daily Word sent')
 
+@daily_word.before_loop
+async def before():
+  await bot.wait_until_ready()
 # The bot inspires the user with a quote upon request
 @bot.command()
 async def inspire(ctx):
