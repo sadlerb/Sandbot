@@ -20,7 +20,7 @@ async def on_ready():
   await bot.change_presence(activity=Game(name='$commands'))
   sys.stdout.write('We have logged in as {0.user}'.format(bot))
   sys.stdout.flush()
-  schedule.every().day.at('12:00').do(daily_word)
+  daily_word()
 
 # On message in text channel
 @bot.event
