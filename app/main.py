@@ -1,4 +1,4 @@
-import time, schedule, random, sys, os
+import time, random, sys, os
 from datetime import datetime
 from app import db, bot
 from app.database import *
@@ -69,7 +69,6 @@ async def daily_word():
   message_channel = bot.get_channel(839259915049893938)
   await message_channel.send(message,embed=embed)
   print_log('Daily Word sent')
-  return schedule.cancelJob
 
 # Before daily_word
 @daily_word.before_loop
