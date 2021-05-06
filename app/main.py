@@ -1,7 +1,4 @@
-import os
-import sys
-import time
-import random
+import time, schedule, random, sys, os
 from datetime import datetime
 from app import db, bot
 from app.database import *
@@ -23,7 +20,7 @@ async def on_ready():
   await bot.change_presence(activity=Game(name='$commands'))
   sys.stdout.write('We have logged in as {0.user}'.format(bot))
   sys.stdout.flush()
-  daily_word.start()
+  schedule.every().day.at('12:00').do(daily_word)
 
 # On message in text channel
 @bot.event
@@ -36,7 +33,7 @@ async def on_message(message):
     await message.channel.send(response['message'])
     sys.stdout.write('A user has been encouraged')
     sys.stdout.flush()
-  await bot.process_commands(message)
+  await bot.process_commands(message) 
 
 # On text channel message deleted
 @bot.event
@@ -72,6 +69,7 @@ async def daily_word():
   message_channel = bot.get_channel(839259915049893938)
   await message_channel.send(message,embed=embed)
   print_log('Daily Word sent')
+  return schedule.cancelJob
 
 # Before daily_word
 @daily_word.before_loop
