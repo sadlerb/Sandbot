@@ -25,11 +25,11 @@ Current Engines: Google,Wikipedia,Urban Dictionary
   
   ## Planned Commands: 
   
-  
+- [X] Jokes on command
 - [ ] A Command to create a poll
 - [X] A search for a word or sentence on google
   - [X] Add ability to search using different engines (wiki,google,urban dictionary)
-    - [ ] Add additional searches as needed
+    - [X] Add additional searches as needed {Image Search}
   - [ ] Return first three results from urban dictionary 
   - [X] Auto post Urban Dictionary word of the day
     -[ ] command to retreive urban dictionary trending words

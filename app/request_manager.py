@@ -5,17 +5,18 @@ import sys
 import time
 from googlesearch import search
 from bs4 import BeautifulSoup
+from app import news_key
 
-
-inspiration_url = 'https://zenquotes.io/api'
-news_url = 'https://newsapi.org'
-wiki_url = 'https://en.wikipedia.org/w/api.php'
+joke_api = 'https://v2.jokeapi.dev/'
+inspiration_api = 'https://zenquotes.io/api'
+news_api = 'https://newsapi.org'
+wiki_api = 'https://en.wikipedia.org/w/api.php'
 urban_url = 'https://www.urbandictionary.com/'
-
+google_api = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyAgJ9tfDhpTquguV7io3snS59QQUy5j--c&cx=37f70d1403a56b5a5'
 
 
 def get_inspiration():
-  response = requests.get( inspiration_url + '/random')
+  response = requests.get( inspiration_api + '/random')
   json_data = json.loads(response.text)
   quote = json_data[0]['q'] + ' -' + json_data[0]['a']
   return (quote)
@@ -23,12 +24,12 @@ def get_inspiration():
 
 def get_news():
   news = []
-  response = requests.get(news_url + '/v2/top-headlines?country=us&apiKey=9e638516f05e48f28b85bd65158e59c7')
+  response = requests.get(news_api + '/v2/top-headlines?country=us&apiKey='+ news_key)
   json_data = json.loads(response.text)
   total = json_data['totalResults']
   for item in json_data['articles']:
-    sys.stdout.flush()
-    news.append('**' + item['title'] + '**' +  '\n >>> ' + item['url'] + '\n')
+    news.append({'title':item['title'],'url':item['url'],'desc':item['description'],'image':item['urlToImage']})
+
   return [news,total]
 
 def wikiSearch(searchPage):
@@ -40,7 +41,7 @@ def wikiSearch(searchPage):
     "srsearch": searchPage,
 }
 
-  response = requests.get(wiki_url,PARAMS)
+  response = requests.get(wiki_api,PARAMS)
   json_data = json.loads(response.text.encode('utf-8').decode('ascii', 'ignore'))
   if json_data['query']['searchinfo']['totalhits'] != 0:
     page = json_data['query']['search'][0]
@@ -54,7 +55,7 @@ def wikiSearch(searchPage):
     'explaintext': 1
 }
     time.sleep(1)
-    response_ext = requests.get(wiki_url,PARAMS_EXT)
+    response_ext = requests.get(wiki_api,PARAMS_EXT)
     json_data = json.loads(response_ext.text.encode('utf-8').decode('ascii', 'ignore'))
     extract = json_data['query']['pages'][str(page['pageid'])]['extract']
     url = 'https://en.wikipedia.org/wiki/' + page['title'].replace(' ','_')
@@ -111,3 +112,26 @@ def get_daily_urban_word():
     print(exception_type)
     sys.stdout.flush()
     return {'response':0}
+
+def get_joke():
+  url = joke_api + 'joke/Any?blacklistFlags=racist,sexist'
+  response = requests.get(url)
+  json_data = json.loads(response.text)
+  if json_data['error'] == True:
+    return {'response': 0}
+  else:
+    if json_data['type'] == 'twopart':
+      return {'setup': json_data['setup'],'delivery': json_data['delivery'],'type':json_data['type'],'response': 1}
+    else:
+      return {'joke':json_data['joke'], 'type':json_data['type'],'response':1}
+
+def googleImage(query,num):
+  images = []
+  request = query.replace(' ','%20')
+  url = google_api + '&q=%s&searchType=image' % (request)
+  response = requests.get(url)
+  json_data = json.loads(response.text)
+  image = json_data['items']
+  for item in range(0,num):
+    images.append(image[item]['link'])
+  return images

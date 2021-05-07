@@ -1,5 +1,5 @@
 import time, random, sys, os
-from datetime import datetime
+from datetime import datetime, timedelta
 from app import db, bot
 from app.database import *
 from app.request_manager import *
@@ -9,6 +9,7 @@ from discord import Game
 import asyncio
 import discord
 from discord.errors import HTTPException
+import sched
 
 sad_words = ['sad','depressed','unhappy','miserable','angry','depressing','miserable','fucked']
 
@@ -20,7 +21,12 @@ async def on_ready():
   await bot.change_presence(activity=Game(name='$commands'))
   sys.stdout.write('We have logged in as {0.user}'.format(bot))
   sys.stdout.flush()
-  daily_word.start()
+  now = datetime.now() 
+  future = datetime.now() 
+  future += timedelta(hours=12)
+  start = (future - now).total_seconds() 
+  s = sched.scheduler(time.time,time.sleep)
+  s.enter(start,1,daily_word.start)
 
 # On message in text channel
 @bot.event
@@ -32,7 +38,6 @@ async def on_message(message):
     response = getRandomEntry(db['messages'])
     await message.channel.send(response['message'])
     sys.stdout.write('A user has been encouraged')
-    sys.stdout.flush()
   await bot.process_commands(message) 
 
 # On text channel message deleted
@@ -57,6 +62,9 @@ async def on_message_edit(before,after):
 async def on_command_error(ctx,error):
   if isinstance(error,commands.CommandOnCooldown):
     await ctx.send('** Still on cooldown**. Please try again in {:.2f}s'.format(error.retry_after),delete_after=3)
+  else:
+    print(error)
+    sys.stdout.flush()
 
 # TASKS
 
@@ -148,8 +156,11 @@ async def news(ctx):
   now = datetime.now().strftime('%d-%m-%Y at %H:%M')
   await ctx.send('Beginning of articles for ' + now )
   for article in news_array: # sends each article with a delay to avoid chat cooldowns
-    time.sleep(5)
-    await ctx.send('\n ' + ':newspaper: | ' + article)
+    time.sleep(3)
+    embed = discord.Embed(title=':newspaper: | ' + article['title'], description=article['desc'],url=article['url'])
+    if article['image'] is not None:
+      embed.set_image(url=article['image'])
+    await ctx.send(embed=embed)
   await ctx.send( str(number) + ' articles sent at ' + now)
   print_log('News has been delivered')
 
@@ -204,7 +215,7 @@ async def search(ctx, *, args):
     search_engine = arguments[0].lower()
 
 
-    if 'wik' in search_engine: # Wiki search
+    if 'wik' in search_engine: # wiki search
       result = wikiSearch(query.join(arguments[1:]))
       if result['response'] == 1:
         message = '**' + result['title'] + '**\n\n' + result['extract']
@@ -241,11 +252,37 @@ async def search(ctx, *, args):
 
   print_log('A user has requested knowleage.')
 
+
+@bot.command(name='joke')
+async def tell_joke(ctx):
+  joke = get_joke()
+  if joke['response'] == 0:
+    print_log('An error has occured in the joke command')
+  else:
+    if joke['type'] == 'single':
+      await ctx.send(joke['joke'])
+    else:
+      await ctx.send(joke['setup'])
+      time.sleep(3)
+      await ctx.send(joke['delivery'])
+      print_log('A user has been entertianed')
+
+@bot.command(name='image')
+async def get_image(ctx,query,num=1):
+  if num == None:
+    num = 1
+  images = googleImage(query,num)
+  for image in images:
+    await ctx.send(image)
+    time.sleep(1)
+  print_log('A user requested images')
+
 # The bot displays its commands
 @bot.command(name='commands')
 async def get_commands(ctx):
   commands = '''
-  **$inspire** - Receive a inspiring message
+  $joke - I will tell a joke
+  $inspire - Receive a inspiring message
   $new 'quotehere' - Add a new sentence to my vocabulary
   $list - View my current vocabulary
   $del 'quoteid' - Delete a sentense from my vocabulary

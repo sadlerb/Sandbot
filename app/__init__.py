@@ -7,5 +7,5 @@ url = os.environ['DATABASE_URL']
 token = os.environ['TOKEN']
 cluster = MongoClient(url)
 db = cluster["DiscordDatabase"] 
-
+news_key = os.environ['NEWS_KEY']
 from app import main
