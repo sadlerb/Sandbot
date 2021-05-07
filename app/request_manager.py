@@ -5,14 +5,14 @@ import sys
 import time
 from googlesearch import search
 from bs4 import BeautifulSoup
-from app import news_key
+from app import news_key, engine_id, google_key
 
 joke_api = 'https://v2.jokeapi.dev/'
 inspiration_api = 'https://zenquotes.io/api'
 news_api = 'https://newsapi.org'
 wiki_api = 'https://en.wikipedia.org/w/api.php'
 urban_url = 'https://www.urbandictionary.com/'
-google_api = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyAgJ9tfDhpTquguV7io3snS59QQUy5j--c&cx=37f70d1403a56b5a5'
+google_api = 'https://www.googleapis.com/customsearch/v1?key=%s&cx=%s' % (google_key,engine_id)
 
 
 def get_inspiration():
