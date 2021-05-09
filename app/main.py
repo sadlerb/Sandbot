@@ -11,7 +11,7 @@ import discord
 from discord.errors import HTTPException
 import sched
 
-sad_words = ['sad','depressed','unhappy','miserable','angry','depressing','miserable','fucked']
+sad_words = ['sad','depressed','unhappy','miserable','angry','depressing','miserable','fucked','shit']
 
 # EVENTS
 
@@ -62,6 +62,8 @@ async def on_message_edit(before,after):
 async def on_command_error(ctx,error):
   if isinstance(error,commands.CommandOnCooldown):
     await ctx.send('** Still on cooldown**. Please try again in {:.2f}s'.format(error.retry_after),delete_after=3)
+  if isinstance(error,commands.CommandNotFound):
+    await ctx.send('Command not found please check the command and try again.')
   else:
     print(error)
     sys.stdout.flush()
