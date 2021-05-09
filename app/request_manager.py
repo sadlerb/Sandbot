@@ -3,9 +3,10 @@ import json
 import requests
 import sys
 import time
+import asyncpraw
 from googlesearch import search
 from bs4 import BeautifulSoup
-from app import news_key, engine_id, google_key
+from app import news_key, engine_id, google_key,reddit_id,reddit_key,reddit_password
 
 joke_api = 'https://v2.jokeapi.dev/'
 inspiration_api = 'https://zenquotes.io/api'
@@ -13,6 +14,7 @@ news_api = 'https://newsapi.org'
 wiki_api = 'https://en.wikipedia.org/w/api.php'
 urban_url = 'https://www.urbandictionary.com/'
 google_api = 'https://www.googleapis.com/customsearch/v1?key=%s&cx=%s' % (google_key,engine_id)
+reddit_api = 'https://www.reddit.com/r/'
 
 
 def get_inspiration():
@@ -135,3 +137,18 @@ def googleImage(query,num):
   for item in range(0,num):
     images.append(image[item]['link'])
   return images
+
+
+async def get_meme():
+  auth = requests.auth.HTTPBasicAuth(reddit_api,reddit_key)
+  reddit = asyncpraw.Reddit(
+    client_id=reddit_id,
+    client_secret=reddit_key,
+    password=reddit_password,
+    user_agent="Sandbot by u/Reldasgg",
+    username="Reldasgg",
+)
+
+  subreddit = await reddit.subreddit("meme")
+  async for meme in subreddit.random_rising():
+    return meme.url

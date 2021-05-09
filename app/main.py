@@ -207,16 +207,14 @@ async def clean(ctx,amount):
 # Searches for the users message on the specified engine
 @bot.command()
 @commands.cooldown(1, 5, commands.BucketType.user)
-async def search(ctx, *, args):
+async def search(ctx, args, engine,num=1):
   try:
     await ctx.send('Searching ...',delete_after=2)
-    arguments = args.split(' ')
-    query = ' '
-    search_engine = arguments[0].lower()
+    search_engine = engine.lower()
 
 
-    if 'wik' in search_engine: # wiki search
-      result = wikiSearch(query.join(arguments[1:]))
+    if 'wi' in search_engine: # wiki search
+      result = wikiSearch(args)
       if result['response'] == 1:
         message = '**' + result['title'] + '**\n\n' + result['extract']
         embed = discord.Embed(title=result['title'],url=result['url'],description='Wikipedia ' + result['title'])
@@ -226,25 +224,31 @@ async def search(ctx, *, args):
         await ctx.send(message)
 
 
-    elif 'goog' in search_engine: # google search
-      result = googleSearch((query.join(arguments[1:])))
+    elif 'go' in search_engine: # google search
+      result = googleSearch(args)
       await ctx.send('\n'.join(result))
 
 
-    elif 'urb' in search_engine: # urban dictionary search 
-      result = urbanSearch(query.join(arguments[1:]))
+    elif 'ur' in search_engine: # urban dictionary search 
+      result = urbanSearch(args)
       if result['response'] == 1:
         message = '**%s** \n\n%s \n\n*%s* ' % (result['word'],result['meaning'],result['example'])
         embed = discord.Embed(title=result['word'],url=result['url'],description= 'Urban Dictionary ' + result['word'])
         await ctx.send(message,embed=embed)
+        
       else:
         await ctx.send('Word was not found on Urban Dictionary')
 
+
+    elif 'image' in search_engine or 'img' in search_engine:
+      await get_image(ctx,args,num)
+
+
     else: # google search if requsted engine is not recongised
-      result = googleSearch((query.join(args)))
+      result = googleSearch(args)
       await ctx.send('\n'.join(result))
   except HTTPException: # google search args if error occurs
-      result = googleSearch((query.join(args)))
+      result = googleSearch(args)
       await ctx.send('\n'.join(result))
   except Exception as err:
     exception_type = type(err).__name__
@@ -267,15 +271,15 @@ async def tell_joke(ctx):
       await ctx.send(joke['delivery'])
       print_log('A user has been entertianed')
 
-@bot.command(name='image')
-async def get_image(ctx,query,num=1):
-  if num == None:
-    num = 1
-  images = googleImage(query,num)
-  for image in images:
-    await ctx.send(image)
-    time.sleep(1)
-  print_log('A user requested images')
+
+
+@bot.command(name='meme')
+async def meme(ctx):
+  meme = await get_meme()
+  await ctx.send(meme)
+
+
+
 
 # The bot displays its commands
 @bot.command(name='commands')
@@ -302,3 +306,11 @@ def print_log(message):
   sys.stdout.write(message)
   sys.stdout.flush()
 
+async def get_image(ctx,query,num=1):
+  if num == None:
+    num = 1
+  images = googleImage(query,num)
+  for image in images:
+    await ctx.send(image)
+    time.sleep(1)
+  print_log('A user requested images')

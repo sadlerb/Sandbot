@@ -42,7 +42,7 @@ Current Engines: Google,Wikipedia,Urban Dictionary
   - [ ] Only specific role can delete chat history
 - [X] very advanced decision making
 - [ ] to do lists
-- [ ] post memes every hour
+- [X] ~post memes every hour~ Command to post a random meme from reddit
 - [ ] Post live updates on videogame sales 
 
 Known issues

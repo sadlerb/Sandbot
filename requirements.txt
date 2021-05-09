@@ -5,3 +5,4 @@ requests
 jsons
 google
 beautifulsoup4
+asyncpraw

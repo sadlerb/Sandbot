@@ -10,4 +10,7 @@ db = cluster["DiscordDatabase"]
 news_key = os.environ['NEWS_KEY']
 google_key = os.environ['GOOGLE_KEY']
 engine_id = os.environ['SEARCH_ID']
+reddit_key=os.environ['REDDIT_SECRET_KEY']
+reddit_id=os.environ['REDDIT_CLIENT_ID']
+reddit_password=os.environ['REDDIT_PASSWORD']
 from app import main
