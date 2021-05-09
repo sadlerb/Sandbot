@@ -32,7 +32,7 @@ Current Engines: Google,Wikipedia,Urban Dictionary
     - [X] Add additional searches as needed {Image Search}
   - [ ] Return first three results from urban dictionary 
   - [X] Auto post Urban Dictionary word of the day
-    -[ ] command to retreive urban dictionary trending words
+    -[ ] Command to retreive urban dictionary trending words
   - [ ] Add wiki image to embed
   - [ ] Modify current google results to better format
 - [X] Add ability to get current news headlines and links 

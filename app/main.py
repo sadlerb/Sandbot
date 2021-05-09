@@ -168,7 +168,7 @@ async def news(ctx):
 @bot.command()
 async def decide(ctx, *, args):
   choices = args.split('?')
-  await ctx.send('Sandbot thinks you should ' + random.choice(choices))
+  await ctx.send('Sandbot picks' + random.choice(choices))
   print_log('Sandbot made a very difficult decision')
 
 
@@ -296,10 +296,6 @@ async def get_commands(ctx):
   response = '```' + commands + '```'
   await ctx.send(response)
   print_log('Sandbots commands have been delivered')
-
-
-
-
 
 
 def print_log(message):
