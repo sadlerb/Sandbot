@@ -21,11 +21,11 @@ async def on_ready():
   await bot.change_presence(activity=Game(name='$commands'))
   sys.stdout.write('We have logged in as {0.user}'.format(bot))
   sys.stdout.flush()
-  now = datetime.now() 
-  future = datetime.now() 
-  future += timedelta(hours=12)
-  start = (future - now).total_seconds() 
-  s = sched.scheduler(time.time,time.sleep)
+  #now = datetime.now() 
+  #future = datetime.now() 
+  #future += timedelta(hours=12)
+  #start = (future - now).total_seconds() 
+  #s = sched.scheduler(time.time,time.sleep)
   daily_word.start()
 
 # On message in text channel
