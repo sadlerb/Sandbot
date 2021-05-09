@@ -146,7 +146,7 @@ async def get_meme():
     client_secret=reddit_key,
     password=reddit_password,
     user_agent="Sandbot by u/Reldasgg",
-    username="Reldasgg",
+    username="Sandbot_Reddit",
 )
 
   subreddit = await reddit.subreddit("meme")

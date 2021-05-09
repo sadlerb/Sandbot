@@ -63,7 +63,7 @@ async def on_command_error(ctx,error):
   if isinstance(error,commands.CommandOnCooldown):
     await ctx.send('** Still on cooldown**. Please try again in {:.2f}s'.format(error.retry_after),delete_after=3)
   if isinstance(error,commands.CommandNotFound):
-    await ctx.send('Command not found please check the command and try again.')
+    await ctx.send('Command not found please check the command and try again.',delete_after=6)
   else:
     print(error)
     sys.stdout.flush()
