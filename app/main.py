@@ -26,7 +26,6 @@ async def on_ready():
   #future += timedelta(hours=12)
   #start = (future - now).total_seconds() 
   #s = sched.scheduler(time.time,time.sleep)
-  daily_word.start()
 
 # On message in text channel
 @bot.event
@@ -72,12 +71,11 @@ async def on_command_error(ctx,error):
 
 # Send Urban Dictionary word of the day to text channel
 @tasks.loop(hours=24)
-async def daily_word():
+async def daily_word(ctx):
   result = get_daily_urban_word()
   message = '**Word of the Day** \n\n***%s*** \n\n%s \n\n*%s* ' % (result['word'],result['meaning'],result['example'])
   embed = discord.Embed(title=result['word'],url=result['url'],description= 'Urban Dictionary ' + result['word'])
-  message_channel = bot.get_channel(839259915049893938)
-  await message_channel.send(message,embed=embed)
+  await ctx.send(message,embed=embed)
   print_log('Daily Word sent')
 
 # Before daily_word
@@ -317,3 +315,8 @@ async def get_image(ctx,query,num=1):
     await ctx.send(image)
     time.sleep(1)
   print_log('A user requested images')
+
+@bot.command(name="startDaily")
+async def startDaily(ctx):
+  daily_word.start(ctx)
+  print_log('Daily word started at ' + datetime.now())
