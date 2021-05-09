@@ -26,7 +26,7 @@ async def on_ready():
   future += timedelta(hours=12)
   start = (future - now).total_seconds() 
   s = sched.scheduler(time.time,time.sleep)
-  s.enter(start,1,daily_word.start)
+  daily_word.start()
 
 # On message in text channel
 @bot.event
