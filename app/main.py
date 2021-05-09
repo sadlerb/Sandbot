@@ -286,6 +286,7 @@ async def meme(ctx):
 async def get_commands(ctx):
   commands = '''
   $joke - I will tell a joke
+  $meme- I will post a random meme
   $inspire - Receive a inspiring message
   $new 'quotehere' - Add a new sentence to my vocabulary
   $list - View my current vocabulary
@@ -294,7 +295,7 @@ async def get_commands(ctx):
   $decide choice1?choice2?choicex - I will use advanced AI technology to select the right choice for you
   $clean 'amount' - I will delete amount number of messages. Limit = 98
   $search 'engine' 'query' - I will search for whatever you tell me to on the requested engine(5 second cooldown). Default google when no engine is found
-  Current engines are google, wikipedia and urban dictionary
+  Current engines are google, wikipedia, urban dictionary, images
   I will randomly pop in from time to time on certain comments
   '''
   response = '```' + commands + '```'

@@ -4,7 +4,11 @@ A discord bot that I built to do random things for fun
 ## Live Commands:
 ```
 $inspire - Receive a inspiring message
-    
+
+$joke - Sandbot will tell a joke    
+
+$meme - Sandbot will send a random meme
+
 $new <quote>  - Send the users qoute to a mongo database
     
 $list - View all quotes in the database 
@@ -18,7 +22,7 @@ $decide choice1?choice2?choicex - Makes a difficult decision for a user
 $clean amount - Deletes amount number of messages in the current channel after confirmation  
 
 $search <engine> <query> - Search for a given word on the specified engine. Default google
-Current Engines: Google,Wikipedia,Urban Dictionary
+Current Engines: Google,Wikipedia,Urban Dictionary,Images
 
 ```
 
