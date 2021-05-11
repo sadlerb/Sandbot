@@ -15,6 +15,14 @@ wiki_api = 'https://en.wikipedia.org/w/api.php'
 urban_url = 'https://www.urbandictionary.com/'
 google_api = 'https://www.googleapis.com/customsearch/v1?key=%s&cx=%s' % (google_key,engine_id)
 reddit_api = 'https://www.reddit.com/r/'
+auth = requests.auth.HTTPBasicAuth(reddit_api,reddit_key)
+reddit = asyncpraw.Reddit(
+    client_id=reddit_id,
+    client_secret=reddit_key,
+    password=reddit_password,
+    user_agent="Sandbot by u/Reldasgg",
+    username="Sandbot_Reddit",
+)
 
 
 def get_inspiration():
@@ -140,15 +148,24 @@ def googleImage(query,num):
 
 
 async def get_meme():
-  auth = requests.auth.HTTPBasicAuth(reddit_api,reddit_key)
-  reddit = asyncpraw.Reddit(
-    client_id=reddit_id,
-    client_secret=reddit_key,
-    password=reddit_password,
-    user_agent="Sandbot by u/Reldasgg",
-    username="Sandbot_Reddit",
-)
+  meme = None
+  subreddit = await reddit.subreddit("memes")
+  async for submission in subreddit.random_rising(limit=1):
+    meme = submission
+  await meme.upvote()
+  return meme.url
 
-  subreddit = await reddit.subreddit("meme")
-  async for meme in subreddit.random_rising():
-    return meme.url
+
+async def get_random_post(sub):
+  try:
+    subreddit = await reddit.subreddit(sub)
+    submission = await subreddit.random()
+    return{'response':1,'title':submission.title,'url':submission.url,'text':submission.selftext}
+  
+  except Exception as e:
+    print(e)
+    sys.stdout.flush()
+    return {'response':0}
+    
+
+      

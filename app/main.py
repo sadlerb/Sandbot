@@ -83,6 +83,7 @@ async def daily_word(ctx):
 async def before():
   await bot.wait_until_ready()
 
+
 # COMMANDS
 
 # The bot inspires the user with a quote upon request
@@ -278,8 +279,13 @@ async def meme(ctx):
   meme = await get_meme()
   await ctx.send(meme)
 
-
-
+@bot.command(name='reddit')
+async def get_random_sub_post(ctx,args):
+  response = await get_random_post(args)
+  if response['response'] == 1:
+    await ctx.send('***%s***\n%s\n\n%s' % (response['title'],response['text'],response['url']))
+  else:
+    await ctx.send('Subreddit not found',delete_after=3)
 
 # The bot displays its commands
 @bot.command(name='commands')
@@ -319,4 +325,4 @@ async def get_image(ctx,query,num=1):
 @bot.command(name="startDaily")
 async def startDaily(ctx):
   daily_word.start(ctx)
-  print_log('Daily word started at ' + datetime.now())
+  print_log('Daily word started at ' + datetime.now.strftime())

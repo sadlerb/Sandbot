@@ -24,6 +24,8 @@ $clean amount - Deletes amount number of messages in the current channel after c
 $search <engine> <query> - Search for a given word on the specified engine. Default google
 Current Engines: Google,Wikipedia,Urban Dictionary,Images
 
+$reddit <subreddit< - Get a random post from the specified subreddit>
+
 ```
 
   
