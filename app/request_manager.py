@@ -1,9 +1,9 @@
-
 import json
 import requests
 import sys
 import time
 import asyncpraw
+import random
 from googlesearch import search
 from bs4 import BeautifulSoup
 from app import news_key, engine_id, google_key,reddit_id,reddit_key,reddit_password
@@ -159,7 +159,7 @@ async def get_meme():
 async def get_random_post(sub):
   try:
     subreddit = await reddit.subreddit(sub)
-    submission = await subreddit.random()
+    submission = random.choice([submission async for submission in subreddit.hot(limit=25) if submission.stickied() == False])
     return{'response':1,'title':submission.title,'url':submission.url,'text':submission.selftext}
   
   except Exception as e:
@@ -168,4 +168,17 @@ async def get_random_post(sub):
     return {'response':0}
     
 
-      
+async def saleInfo(ctx):
+  subreddit = await reddit.subreddit('GameDeals')
+  try:
+    async for submission in subreddit.stream.submissions(skip_existing=True):
+      body = submission.selftext
+      if len(body) > 2000:
+        body = body[0:1700]
+        body += '\n... See the link for more details'
+      submission.upvote()
+      post = ('***%s***\n\n%s\n%s' % (submission.title,submission.url,body))
+      await ctx.send(post)
+  except Exception as e:
+    print(e)
+    sys.stdout.flush()

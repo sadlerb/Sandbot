@@ -326,3 +326,19 @@ async def get_image(ctx,query,num=1):
 async def startDaily(ctx):
   daily_word.start(ctx)
   print_log('Daily word started at ' + datetime.now.strftime())
+
+@bot.command(name='startSales')
+async def post_sales(ctx):
+  await ctx.send('Posting latest info in this channel', delete_after=5)
+  start_sale.start(ctx)
+  print_log('Starting sale info')
+
+@bot.command(name='stopSales')
+async def stop_sale(ctx):
+  await ctx.send("Stopping stream",delete_after=5)
+  start_sale.cancel()
+  print_log('Sale info stopped')
+
+@tasks.loop(count=1)
+async def start_sale(ctx):
+  await saleInfo(ctx)

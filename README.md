@@ -24,7 +24,7 @@ $clean amount - Deletes amount number of messages in the current channel after c
 $search <engine> <query> - Search for a given word on the specified engine. Default google
 Current Engines: Google,Wikipedia,Urban Dictionary,Images
 
-$reddit <subreddit< - Get a random post from the specified subreddit>
+$reddit <subreddit> - Get a random post from the specified subreddit>
 
 ```
 
@@ -36,10 +36,7 @@ $reddit <subreddit< - Get a random post from the specified subreddit>
 - [X] A search for a word or sentence on google
   - [X] Add ability to search using different engines (wiki,google,urban dictionary)
     - [X] Add additional searches as needed {Image Search}
-  - [ ] Return first three results from urban dictionary 
   - [X] Auto post Urban Dictionary word of the day
-    -[ ] Command to retreive urban dictionary trending words
-  - [ ] Add wiki image to embed
   - [ ] Modify current google results to better format
 - [X] Add ability to get current news headlines and links 
   - [ ] Allow news search by category 
@@ -47,9 +44,8 @@ $reddit <subreddit< - Get a random post from the specified subreddit>
 - [X] Delete message history
   - [ ] Only specific role can delete chat history
 - [X] very advanced decision making
-- [ ] to do lists
 - [X] ~post memes every hour~ Command to post a random meme from reddit
-- [ ] Post live updates on videogame sales 
+- [X] Post live updates on videogame sales 
 
 Known issues
 
