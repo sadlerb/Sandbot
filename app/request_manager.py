@@ -174,9 +174,9 @@ async def saleInfo(ctx):
     async for submission in subreddit.stream.submissions(skip_existing=True):
       body = submission.selftext
       if len(body) > 2000:
-        body = body[0:1700]
+        body = body[0:1600]
         body += '\n... See the link for more details'
-      submission.upvote()
+      await submission.upvote()
       post = ('***%s***\n\n%s\n%s' % (submission.title,submission.url,body))
       await ctx.send(post)
   except Exception as e:
