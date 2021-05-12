@@ -159,7 +159,7 @@ async def get_meme():
 async def get_random_post(sub):
   try:
     subreddit = await reddit.subreddit(sub)
-    submission = random.choice([submission async for submission in subreddit.hot(limit=25) if submission.stickied() == False])
+    submission = random.choice([submission async for submission in subreddit.hot(limit=25) if not submission.stickied])
     return{'response':1,'title':submission.title,'url':submission.url,'text':submission.selftext}
   
   except Exception as e:
