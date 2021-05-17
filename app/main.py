@@ -325,7 +325,6 @@ async def get_image(ctx,query,num=1):
 @bot.command(name="startDaily")
 async def startDaily(ctx):
   daily_word.start(ctx)
-  print_log('Daily word started at ' + datetime.now.strftime())
 
 @bot.command(name='startSales')
 async def post_sales(ctx):
