@@ -181,22 +181,22 @@ async def clean(ctx,amount):
   if amount > 98 or amount < 1:
     await ctx.send('Please enter a number between 1 and 98',delete_after=5)
     return 
-    await ctx.send('Add reaction 👍 to confirm',delete_after=10) # waits for confirmation from user before deleteing
-    def check (reaction,user):
-      return user == ctx.message.author and str(reaction.emoji) == '👍'
+  await ctx.send('Add reaction 👍 to confirm',delete_after=10) # waits for confirmation from user before deleteing
+  def check (reaction,user):
+    return user == ctx.message.author and str(reaction.emoji) == '👍'
 
-    try:
-      reaction,user = await bot.wait_for('reaction_add',timeout=10,check=check) # waits 10 seconds for reaction
+  try:
+    reaction,user = await bot.wait_for('reaction_add',timeout=10,check=check) # waits 10 seconds for reaction
 
-    except ValueError: # on non int value given
-      ctx.channel.send('Please enter a number',delete_after=5)
+  except ValueError: # on non int value given
+    ctx.channel.send('Please enter a number',delete_after=5)
 
-    except asyncio.TimeoutError: # on timeout
-      await ctx.send('Method aborted',delete_after=5)
+  except asyncio.TimeoutError: # on timeout
+    await ctx.send('Method aborted',delete_after=5)
 
-    except MissingRequiredArgument: # on no amount given 
-      await ctx.send('No amount was given. Aborting process',delete_after=5)
-      
+  except MissingRequiredArgument: # on no amount given 
+    await ctx.send('No amount was given. Aborting process',delete_after=5)
+
   else:
     mgs = []
     async for m in ctx.channel.history(limit=amount+2):
