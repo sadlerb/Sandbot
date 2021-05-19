@@ -177,11 +177,10 @@ async def decide(ctx, *, args):
 # The bot deletes the specified amount of messages from the text channel
 @bot.command()
 async def clean(ctx,amount):
-  if ctx.message.author.server_permissions.administrator:
-    amount = int(amount)
-    if amount > 98 or amount < 1:
-      await ctx.send('Please enter a number between 1 and 98',delete_after=5)
-      return 
+  amount = int(amount)
+  if amount > 98 or amount < 1:
+    await ctx.send('Please enter a number between 1 and 98',delete_after=5)
+    return 
     await ctx.send('Add reaction 👍 to confirm',delete_after=10) # waits for confirmation from user before deleteing
     def check (reaction,user):
       return user == ctx.message.author and str(reaction.emoji) == '👍'
