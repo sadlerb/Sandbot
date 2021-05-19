@@ -197,15 +197,13 @@ async def clean(ctx,amount):
     except MissingRequiredArgument: # on no amount given 
       await ctx.send('No amount was given. Aborting process',delete_after=5)
       
-    else:
-      mgs = []
-      async for m in ctx.channel.history(limit=amount+2):
-        mgs.append(m)
-      await ctx.channel.delete_messages(mgs)
-      await ctx.send('The evidence has been removed',delete_after=5)
-      print_log('Some evidence was removed')
   else:
-    ctx.send('This command can only be used by an administrator',delete_after=3)
+    mgs = []
+    async for m in ctx.channel.history(limit=amount+2):
+      mgs.append(m)
+    await ctx.channel.delete_messages(mgs)
+    await ctx.send('The evidence has been removed',delete_after=5)
+    print_log('Some evidence was removed')
 
 # Searches for the users message on the specified engine
 @bot.command()
