@@ -10,6 +10,7 @@ import asyncio
 import discord
 from discord.errors import HTTPException
 import sched
+from discord.utils import get
 
 sad_words = ['sad','depressed','unhappy','miserable','angry','depressing','miserable','fucked','shit']
 
@@ -176,34 +177,36 @@ async def decide(ctx, *, args):
 # The bot deletes the specified amount of messages from the text channel
 @bot.command()
 async def clean(ctx,amount):
-  amount = int(amount)
-  if amount > 98 or amount < 1:
-    await ctx.send('Please enter a number between 1 and 98',delete_after=5)
-    return 
-  await ctx.send('Add reaction 👍 to confirm',delete_after=10) # waits for confirmation from user before deleteing
-  def check (reaction,user):
-    return user == ctx.message.author and str(reaction.emoji) == '👍'
+  if ctx.message.author.server_permissions.administrator:
+    amount = int(amount)
+    if amount > 98 or amount < 1:
+      await ctx.send('Please enter a number between 1 and 98',delete_after=5)
+      return 
+    await ctx.send('Add reaction 👍 to confirm',delete_after=10) # waits for confirmation from user before deleteing
+    def check (reaction,user):
+      return user == ctx.message.author and str(reaction.emoji) == '👍'
 
-  try:
-    reaction,user = await bot.wait_for('reaction_add',timeout=10,check=check) # waits 10 seconds for reaction
+    try:
+      reaction,user = await bot.wait_for('reaction_add',timeout=10,check=check) # waits 10 seconds for reaction
 
-  except ValueError: # on non int value given
-    ctx.channel.send('Please enter a number',delete_after=5)
+    except ValueError: # on non int value given
+      ctx.channel.send('Please enter a number',delete_after=5)
 
-  except asyncio.TimeoutError: # on timeout
-    await ctx.send('Method aborted',delete_after=5)
+    except asyncio.TimeoutError: # on timeout
+      await ctx.send('Method aborted',delete_after=5)
 
-  except MissingRequiredArgument: # on no amount given 
-    await ctx.send('No amount was given. Aborting process',delete_after=5)
-    
+    except MissingRequiredArgument: # on no amount given 
+      await ctx.send('No amount was given. Aborting process',delete_after=5)
+      
+    else:
+      mgs = []
+      async for m in ctx.channel.history(limit=amount+2):
+        mgs.append(m)
+      await ctx.channel.delete_messages(mgs)
+      await ctx.send('The evidence has been removed',delete_after=5)
+      print_log('Some evidence was removed')
   else:
-    mgs = []
-    async for m in ctx.channel.history(limit=amount+2):
-      mgs.append(m)
-    await ctx.channel.delete_messages(mgs)
-    await ctx.send('The evidence has been removed',delete_after=5)
-    print_log('Some evidence was removed')
-
+    ctx.send('This command can only be used by an administrator',delete_after=3)
 
 # Searches for the users message on the specified engine
 @bot.command()
@@ -287,10 +290,35 @@ async def get_random_sub_post(ctx,args):
   else:
     await ctx.send('Subreddit not found',delete_after=3)
 
+@bot.command()
+async def poll( ctx, question, *options: str):
+    if len(options) <= 1:
+        await ctx.send('You need more than one option to make a poll!')
+        return
+    if len(options) > 10:
+        await ctx.send('You cannot make a poll for more than 10 things!')
+        return
+
+
+    if len(options) == 2 and options[0].lower() == 'yes' and options[1].lower() == 'no':
+        reactions = ['✅', '❌']
+    else:
+        reactions = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟']
+
+    description = []
+    for x, option in enumerate(options):
+        description += '\n {} {}'.format(reactions[x], option)
+    embed = discord.Embed(title=question, description=''.join(description))
+    react_message = await ctx.send(embed=embed)
+    embed.set_footer(text='Poll ID: {}'.format(react_message.id))
+    await react_message.edit(embed=embed)
+
+
 # The bot displays its commands
 @bot.command(name='commands')
 async def get_commands(ctx):
   commands = '''
+  $poll 'question' *options - I will create a poll with up to 10 options
   $joke - I will tell a joke
   $meme- I will post a random meme
   $inspire - Receive a inspiring message
@@ -341,3 +369,4 @@ async def stop_sale(ctx):
 @tasks.loop(count=1)
 async def start_sale(ctx):
   await saleInfo(ctx)
+
