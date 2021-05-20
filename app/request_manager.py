@@ -182,3 +182,4 @@ async def saleInfo(ctx):
   except Exception as e:
     print(e)
     sys.stdout.flush()
+    pass
