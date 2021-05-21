@@ -73,11 +73,16 @@ async def on_command_error(ctx,error):
 # Send Urban Dictionary word of the day to text channel
 @tasks.loop(hours=24)
 async def daily_word(ctx):
-  result = get_daily_urban_word()
-  message = '**Word of the Day** \n\n***%s*** \n\n%s \n\n*%s* ' % (result['word'],result['meaning'],result['example'])
-  embed = discord.Embed(title=result['word'],url=result['url'],description= 'Urban Dictionary ' + result['word'])
-  await ctx.send(message,embed=embed)
-  print_log('Daily Word sent')
+  try:
+    result = get_daily_urban_word()
+    message = '**Word of the Day** \n\n***%s*** \n\n%s \n\n*%s* ' % (result['word'],result['meaning'],result['example'])
+    embed = discord.Embed(title=result['word'],url=result['url'],description= 'Urban Dictionary ' + result['word'])
+    await ctx.send(message,embed=embed)
+    print_log('Daily Word sent')
+  except Exception as e:
+    print(e)
+    print_log('An error as occured')
+    pass
 
 # Before daily_word
 @daily_word.before_loop
