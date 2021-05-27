@@ -41,22 +41,22 @@ async def on_message(message):
   await bot.process_commands(message) 
 
 # On text channel message deleted
-@bot.event
+""" @bot.event
 async def on_message_delete(message):
   if message.author == bot.user:
     return
   
   await message.channel.send('I saw that delete ' + message.author.name + '. What are you hiding?')
-  print_log('A user was sus.')
+  print_log('A user was sus.') """
 
 # On text channel message edited
-@bot.event
+""" @bot.event
 async def on_message_edit(before,after):
   if before.author == bot.user:
     return
   await after.channel.send('I saw that edit '  + after.author.name + '.')
   print_log('A user has been warned')
-
+ """
 # Command error handeling
 @bot.event
 async def on_command_error(ctx,error):
