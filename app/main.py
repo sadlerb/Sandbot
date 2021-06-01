@@ -83,6 +83,10 @@ async def daily_word(ctx):
     print(e)
     print_log('An error as occured')
     pass
+  
+@tasks.loop(count=1)
+async def start_sale(ctx):
+  await saleInfo(ctx)
 
 # Before daily_word
 @daily_word.before_loop
@@ -372,7 +376,4 @@ async def stop_sale(ctx):
   start_sale.cancel()
   print_log('Sale info stopped')
 
-@tasks.loop(count=1)
-async def start_sale(ctx):
-  await saleInfo(ctx)
 
