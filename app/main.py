@@ -89,6 +89,10 @@ async def daily_word(ctx):
 async def before():
   await bot.wait_until_ready()
 
+@start_sale.before_loop
+async def before():
+  await bot.wait_until_ready()
+
 
 # COMMANDS
 
