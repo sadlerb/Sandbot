@@ -293,8 +293,8 @@ async def meme(ctx):
   await ctx.send(meme)
 
 @bot.command(name='reddit')
-async def get_random_sub_post(ctx,args):
-  response = await get_random_post(args)
+async def get_random_sub_post(ctx,reddit,sort='hot'):
+  response = await get_random_post(reddit,sort)
   if response['response'] == 1:
     await ctx.send('***%s***\n%s\n\n%s' % (response['title'],response['text'],response['url']))
   else:

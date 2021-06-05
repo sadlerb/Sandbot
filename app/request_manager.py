@@ -156,12 +156,16 @@ async def get_meme():
   return meme.url
 
 
-async def get_random_post(sub):
+async def get_random_post(sub,sort_by):
   try:
-    subreddit = await reddit.subreddit(sub)
-    submission = random.choice([submission async for submission in subreddit.hot(limit=25) if not submission.stickied])
-    return{'response':1,'title':submission.title,'url':submission.url,'text':submission.selftext}
-  
+    if sort_by == 'random':
+      subreddit = await reddit.subreddit(sub)
+      submission = await subreddit.random()
+      return{'response':1,'title':submission.title,'url':submission.url,'text':submission.selftext}
+    else:
+      subreddit = await reddit.subreddit(sub)
+      submission = random.choice([submission async for submission in subreddit.hot(limit=25) if not submission.stickied])
+      return{'response':1,'title':submission.title,'url':submission.url,'text':submission.selftext}     
   except Exception as e:
     print(e)
     sys.stdout.flush()
