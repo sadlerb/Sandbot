@@ -21,6 +21,8 @@ sad_words = ['sad','depressed','unhappy','miserable','angry','depressing','miser
 async def on_ready():
   await bot.change_presence(activity=Game(name='$commands'))
   sys.stdout.write('We have logged in as {0.user}'.format(bot))
+  daily_word.start()
+  start_sale.start()
   sys.stdout.flush()
   #now = datetime.now() 
   #future = datetime.now() 
@@ -72,8 +74,9 @@ async def on_command_error(ctx,error):
 
 # Send Urban Dictionary word of the day to text channel
 @tasks.loop(hours=24)
-async def daily_word(ctx):
+async def daily_word():
   try:
+    ctx = bot.get_channel(839259915049893938)
     result = get_daily_urban_word()
     message = '**Word of the Day** \n\n***%s*** \n\n%s \n\n*%s* ' % (result['word'],result['meaning'],result['example'])
     embed = discord.Embed(title=result['word'],url=result['url'],description= 'Urban Dictionary ' + result['word'])
@@ -85,7 +88,8 @@ async def daily_word(ctx):
     pass
   
 @tasks.loop(count=1)
-async def start_sale(ctx):
+async def start_sale():
+  ctx = bot.get_channel(842119883625594940)
   await saleInfo(ctx)
 
 # Before daily_word
@@ -360,20 +364,20 @@ async def get_image(ctx,query,num=1):
     time.sleep(1)
   print_log('A user requested images')
 
-@bot.command(name="startDaily")
-async def startDaily(ctx):
-  daily_word.start(ctx)
+# @bot.command(name="startDaily")
+# async def startDaily(ctx):
+#   daily_word.start(ctx)
 
-@bot.command(name='startSales')
-async def post_sales(ctx):
-  await ctx.send('Posting latest info in this channel', delete_after=5)
-  start_sale.start(ctx)
-  print_log('Starting sale info')
+# @bot.command(name='startSales')
+# async def post_sales(ctx):
+#   await ctx.send('Posting latest info in this channel', delete_after=5)
+#   start_sale.start(ctx)
+#   print_log('Starting sale info')
 
-@bot.command(name='stopSales')
-async def stop_sale(ctx):
-  await ctx.send("Stopping stream",delete_after=5)
-  start_sale.cancel()
-  print_log('Sale info stopped')
+# @bot.command(name='stopSales')
+# async def stop_sale(ctx):
+#   await ctx.send("Stopping stream",delete_after=5)
+#   start_sale.cancel()
+#   print_log('Sale info stopped')
 
 
