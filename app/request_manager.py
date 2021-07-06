@@ -149,23 +149,28 @@ def googleImage(query,num):
 
 def getalldeals():
   deal_list = []
-  request = cheapshark_api + 'deals?sortBy=Reviews&onSale=1'
+  request = cheapshark_api + 'deals?sortBy=Deal%20Rating&onSale=1&pageSize=10'
   response = requests.get(request)
   json_data = json.loads(response.text)
   for deal in json_data:
-    deal_list.append([deal['title'],deal['normalPrice'],deal['salePrice'],deal['steamRatingPercent'],deal['steamRatingText'],deal['thumb']])
+    title = deal['title'] if deal['title'] != None else " "
+    normal = deal['normalPrice']if deal['normalPrice'] != None else " "
+    sale = deal['salePrice'] if deal['salePrice'] != None else " "
+    steamPercent = deal ['steamRatingPercent'] if deal['steamRatingPercent'] != None else " "
+    steamRatingText = deal['steamRatingText'] if deal['steamRatingText'] != None else " "
+    thumb = deal['thumb']
+    deal_list.append([title,normal,sale,steamPercent,steamRatingText,thumb])
   return deal_list
 
 
 def deallookup(title):
-  request = cheapshark_api + 'games?title=' + title + '&limit=1&exact=1'
+  result=[]
+  request = cheapshark_api + 'games?title=' + title + '&limit=5&exact=0'
   response = requests.get(request)
   json_data = json.loads(response.text)
-  json_data = json_data[0]
-  return {'title':json_data['external'],'lowest':json_data['cheapest'],'img':json_data['thumb']}
- 
-  
-
+  for i in json_data:
+    result.append({'title':i['external'],'lowest':i['cheapest'],'img':i['thumb']})
+  return result
 async def get_meme():
   meme = None
   subreddit = await reddit.subreddit("memes")

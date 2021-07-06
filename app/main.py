@@ -21,7 +21,7 @@ sad_words = ['sad','depressed','unhappy','miserable','angry','depressing','miser
 async def on_ready():
   await bot.change_presence(activity=Game(name='$commands'))
   sys.stdout.write('We have logged in as {0.user}'.format(bot))
-  daily_word.start()
+  #daily_word.start()
   start_sale.start()
   sys.stdout.flush()
 
@@ -117,10 +117,11 @@ async def deal(ctx):
     time.sleep(3)
 @bot.command() 
 async def lookup(ctx,arg):
-  game = deallookup(arg)
-  embed = discord.Embed(title=game['title'],description="Lowest Price: " + game['lowest'])
-  embed.set_image(url=game['img'])
-  await ctx.send(embed=embed)
+  result = deallookup(arg)
+  for game in result:
+    embed = discord.Embed(title=game['title'],description="Lowest Price: " + game['lowest'])
+    embed.set_image(url=game['img'])
+    await ctx.send(embed=embed)
     
 
 
