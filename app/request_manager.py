@@ -158,7 +158,7 @@ def getalldeals():
 
 
 def deallookup(title):
-  request = cheapshark_api + 'games?title=' + title + '&limit=1&exact=0'
+  request = cheapshark_api + 'games?title=' + title + '&limit=1&exact=1'
   response = requests.get(request)
   json_data = json.loads(response.text)
   json_data = json_data[0]
