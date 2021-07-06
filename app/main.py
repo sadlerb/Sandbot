@@ -24,11 +24,7 @@ async def on_ready():
   daily_word.start()
   start_sale.start()
   sys.stdout.flush()
-  #now = datetime.now() 
-  #future = datetime.now() 
-  #future += timedelta(hours=12)
-  #start = (future - now).total_seconds() 
-  #s = sched.scheduler(time.time,time.sleep)
+
 
 # On message in text channel
 @bot.event
@@ -110,7 +106,23 @@ async def inspire(ctx):
   quote = get_inspiration()
   await ctx.send(quote)
   print_log('A user has been inspired')
+
+@bot.command(aliases=['deals'])
+async def deal(ctx):
+  deals = getalldeals()
+  for i in deals:
+    embed = discord.Embed(title=i[0],description='Normal Price: ' + i[1] + '\nSale Price: ' + i[2] + '\nRating: ' + i[3] + ' ' + i[4])
+    embed.set_image(url=i[5])
+    await ctx.send(embed=embed)
+    time.sleep(3)
+@bot.command() 
+async def lookup(ctx,arg):
+  game = deallookup(arg)
+  embed = discord.Embed(title=game['title'],description="Lowest Price: " + game['lowest'])
+  embed.set_image(url=game['img'])
+  await ctx.send(embed=embed)
     
+
 
 # The users message is added to the database
 @bot.command(name='new')

@@ -15,6 +15,7 @@ wiki_api = 'https://en.wikipedia.org/w/api.php'
 urban_url = 'https://www.urbandictionary.com/'
 google_api = 'https://www.googleapis.com/customsearch/v1?key=%s&cx=%s' % (google_key,engine_id)
 reddit_api = 'https://www.reddit.com/r/'
+cheapshark_api = 'https://www.cheapshark.com/api/1.0/'
 auth = requests.auth.HTTPBasicAuth(reddit_api,reddit_key)
 reddit = asyncpraw.Reddit(
     client_id=reddit_id,
@@ -146,6 +147,24 @@ def googleImage(query,num):
     images.append(image[item]['link'])
   return images
 
+def getalldeals():
+  deal_list = []
+  request = cheapshark_api + 'deals?sortBy=Reviews&onSale=1'
+  response = requests.get(request)
+  json_data = json.loads(response.text)
+  for deal in json_data:
+    deal_list.append([deal['title'],deal['normalPrice'],deal['salePrice'],deal['steamRatingPercent'],deal['steamRatingText'],deal['thumb']])
+  return deal_list
+
+
+def deallookup(title):
+  request = cheapshark_api + 'games?title=' + title + '&limit=1&exact=0'
+  response = requests.get(request)
+  json_data = json.loads(response.text)
+  json_data = json_data[0]
+  return {'title':json_data['external'],'lowest':json_data['cheapest'],'img':json_data['thumb']}
+ 
+  
 
 async def get_meme():
   meme = None
@@ -187,3 +206,4 @@ async def saleInfo(ctx):
     print(e)
     sys.stdout.flush()
     pass
+
