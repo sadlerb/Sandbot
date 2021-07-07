@@ -115,8 +115,8 @@ async def deal(ctx):
     embed.set_image(url=i[5])
     await ctx.send(embed=embed)
     time.sleep(3)
-@bot.command() 
-async def lookup(ctx,*arg):
+@bot.command(aliases=['find']) 
+async def lookup(ctx,*,arg):
   result = deallookup(arg)
   for game in result:
     embed = discord.Embed(title=game['title'],description="Lowest Price: " + game['lowest'])
