@@ -21,7 +21,7 @@ sad_words = ['sad','depressed','unhappy','miserable','angry','depressing','miser
 async def on_ready():
   await bot.change_presence(activity=Game(name='$commands'))
   sys.stdout.write('We have logged in as {0.user}'.format(bot))
-  #daily_word.start()
+  daily_word.start()
   start_sale.start()
   sys.stdout.flush()
 
