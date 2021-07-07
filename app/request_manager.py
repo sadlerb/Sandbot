@@ -196,7 +196,7 @@ async def get_random_post(sub,sort_by):
     return {'response':0}
     
 
-async def saleInfo(ctx):
+async def saleInfo(ctx,discord):
   subreddit = await reddit.subreddit('GameDeals')
   try:
     async for submission in subreddit.stream.submissions(skip_existing=True):
@@ -205,8 +205,12 @@ async def saleInfo(ctx):
         body = body[0:1100]
         body += '\n... See the link for more details'
       await submission.upvote()
+      title = submission.title[0:253] + "..." if len(submission.title) > 256 else submission.title
+      embed = discord.Embed(title=title,description=body)
+      
+      embed.add_field(name="Link",value=submission.url)
       post = ('***%s***\n\n%s\n%s' % (submission.title,submission.url,body))
-      await ctx.send(post)
+      await ctx.send(embed=embed)
   except Exception as e:
     print(e)
     sys.stdout.flush()

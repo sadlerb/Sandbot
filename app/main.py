@@ -86,7 +86,7 @@ async def daily_word():
 @tasks.loop(count=1)
 async def start_sale():
   ctx = bot.get_channel(842119883625594940)
-  await saleInfo(ctx)
+  await saleInfo(ctx,discord)
 
 # Before daily_word
 @daily_word.before_loop
