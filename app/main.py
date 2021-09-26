@@ -27,7 +27,7 @@ async def on_ready():
 
 
 # On message in text channel
-@bot.event
+'''@bot.event
 async def on_message(message):
   if message.author == bot.user:
     return
@@ -36,7 +36,7 @@ async def on_message(message):
     response = getRandomEntry(db['messages'])
     await message.channel.send(response['message'])
     sys.stdout.write('A user has been encouraged')
-  await bot.process_commands(message) 
+  await bot.process_commands(message)''' 
 
 # On text channel message deleted
 """ @bot.event
