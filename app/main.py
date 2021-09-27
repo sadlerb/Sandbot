@@ -21,10 +21,11 @@ sad_words = ['sad','depressed','unhappy','miserable','angry','depressing','miser
 async def on_ready():
   await bot.change_presence(activity=Game(name='$commands'))
   sys.stdout.write('We have logged in as {0.user}'.format(bot))
-  daily_word.start()
-  start_sale.start()
   sys.stdout.flush()
 
+def __init__(self):
+  self.daily_word.start()
+  self.start_sale.start()
 
 # On message in text channel
 '''@bot.event
@@ -83,6 +84,7 @@ async def daily_word():
     print_log('An error as occured')
     pass
   
+
 @tasks.loop(count=1)
 async def start_sale():
   ctx = bot.get_channel(842119883625594940)
