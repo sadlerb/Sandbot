@@ -23,9 +23,6 @@ async def on_ready():
   sys.stdout.write('We have logged in as {0.user}'.format(bot))
   sys.stdout.flush()
 
-def __init__(self):
-  self.daily_word.start()
-  self.start_sale.start()
 
 # On message in text channel
 '''@bot.event
