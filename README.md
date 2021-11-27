@@ -1,6 +1,6 @@
 # Sandbot
 
-Add sandbot to your discord server: https://discord.com/api/oauth2/authorize?client_id=832866059995447316&permissions=2148005952&scope=bot
+
 
 A discord bot that I built to do random things for fun
 
