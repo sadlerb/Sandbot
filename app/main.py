@@ -74,11 +74,14 @@ async def on_command_error(ctx,error):
 async def daily_word():
   try:
     ctx = bot.get_channel(839259915049893938)
+    msg = ctx.history(limit=1).flatten()
+    msg = msg[0]
     result = get_daily_urban_word()
     message = '**Word of the Day** \n\n***%s*** \n\n%s \n\n*%s* ' % (result['word'],result['meaning'],result['example'])
     embed = discord.Embed(title=result['word'],url=result['url'],description= 'Urban Dictionary ' + result['word'])
-    await ctx.send(message,embed=embed)
-    print_log('Daily Word sent')
+    if msg != message:
+      await ctx.send(message,embed=embed)
+      print_log('Daily Word sent')
   except Exception as e:
     print(e)
     print_log('An error as occured')
